@@ -4,12 +4,14 @@ from PyQt6.QtWidgets import QListWidgetItem, QApplication
 from PyQt6.QtGui import QRegularExpressionValidator, QClipboard, QImage
 from PyQt6.QtCore import QRegularExpression, QTimer, Qt
 from ModuleAcceptance import acceptance
+from ModuleOrders import orders
 import os
 
 class outlook:
     def __init__(self, ui):
         self.ui = ui
         self.acceptance = acceptance(ui)
+        self.orders = orders(ui)
 
         self.ui.frame_8.setVisible(False)
         self.ui.label_18.setVisible(False)
@@ -189,7 +191,7 @@ class outlook:
             cursor.execute("SELECT outlook_ccopy_emails FROM outlook_ccopy_emails")
             bcc_emails = cursor.fetchall()
             bcc = "; ".join([email[0] for email in bcc_emails])
-            cursor.execute("SELECT providers_email_acceptances FROM providers where providers = ?", [self.ui.orders_comboBox_13.currentText()])
+            cursor.execute("SELECT providers_email_orders FROM providers where providers = ?", [self.ui.orders_comboBox_13.currentText()])
             providers_email_acceptances = cursor.fetchone()[0]
             outlook = win32com.client.Dispatch("Outlook.Application")
             mail = outlook.CreateItem(0)
@@ -203,4 +205,4 @@ class outlook:
             signature = signature.replace('<img src="signature.png" />', "")
             mail.HTMLBody = '<html><body>' + text + signature + "<br>" + "<img src='" + os.path.abspath("signature.png") + "'>" + '</body></html>'
             mail.Send()
-            self.acceptance.acceptance_clr()
+            self.orders.order_clear()
