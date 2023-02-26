@@ -1,5 +1,6 @@
 import sqlite3
 from PyQt6.QtGui import QDoubleValidator
+from PyQt6.QtWidgets import QApplication
 from ModuleProviders import providers
 from ModuleBranches import branches
 
@@ -8,6 +9,7 @@ class acceptance:
         self.ui = ui
         self.providers = providers(ui)
         self.branches = branches(ui)
+        self.clipboard = QApplication.clipboard()
 
         # Ограничение на ввод по типу данных
         self.ui.acceptance_Lenght_1.setValidator(QDoubleValidator(self.ui))
@@ -145,6 +147,7 @@ class acceptance:
         self.ui.reject_result_2.setText('Объем с браком')
         self.ui.reject_result_3.setText('Объем с браком')
         self.ui.reject_result_4.setText('Объем с браком')
+        self.providers.init_data_providers()
 
 # # Копирование результата вычисления принимаего брака в буфер обмена
     def copy_result_1(self):
@@ -548,7 +551,6 @@ class acceptance:
                 if cursor.fetchone() is None:
                     cursor.execute("INSERT INTO base_nubers(number_car, provider) VALUES (?, ?)", [self.ui.acceptance_number.currentText().upper(), self.ui.acceptance_comboBox_2.currentText()])
                     db.commit()
-                self.providers.init_data_providers()
 
             # Занесение приемки в архив
             if self.ui.acceptance_branch_perc_box.value() == 0:
@@ -570,7 +572,7 @@ class acceptance:
 
     # Копирование темы в буфер обмена
     def copytheme(self):
-        self.ui.clipboard.setText(self.ui.acceptance_btn_copy_1.text())
+        self.clipboard.setText(self.ui.acceptance_btn_copy_1.text())
     # Копирование тела в буфер обмена
     def copybody(self):
-        self.ui.clipboard.setText(self.ui.acceptance_btn_copy_2.text())
+        self.clipboard.setText(self.ui.acceptance_btn_copy_2.text())

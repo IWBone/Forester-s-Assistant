@@ -3730,6 +3730,9 @@ border-radius: 10;
 color: white
 </string>
                </property>
+               <property name="maximum">
+                <number>42</number>
+               </property>
               </widget>
              </item>
              <item row="3" column="4">
@@ -3753,6 +3756,9 @@ border-radius: 10;
 color: white
 </string>
                </property>
+               <property name="maximum">
+                <number>42</number>
+               </property>
               </widget>
              </item>
              <item row="4" column="4">
@@ -3775,6 +3781,9 @@ border: 2px solid white;
 border-radius: 10;
 color: white
 </string>
+               </property>
+               <property name="maximum">
+                <number>42</number>
                </property>
               </widget>
              </item>
@@ -4055,6 +4064,9 @@ border: 2px solid white;
 border-radius: 10;
 color: white
 </string>
+               </property>
+               <property name="maximum">
+                <number>42</number>
                </property>
               </widget>
              </item>

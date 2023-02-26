@@ -1,5 +1,6 @@
 import sqlite3
 from PyQt6.QtWidgets import QListWidgetItem
+from PyQt6.QtWidgets import QApplication
 from ModuleProviders import providers
 from ModuleBranches import branches
 
@@ -8,6 +9,7 @@ class orders:
         self.ui = ui
         self.providers = providers(ui)
         self.branches = branches(ui)
+        self.clipboard = QApplication.clipboard()
 
     # Видимость строк
     def order_changeVisibility_1(self):
@@ -105,10 +107,10 @@ class orders:
 
     # Копирование темы в буфер обмена
     def order_copytheme(self):
-        self.ui.clipboard.setText(self.ui.orders_pushButton_2.text())
+        self.clipboard.setText(self.ui.orders_pushButton_2.text())
     # Копирование тела в буфер обмена
     def order_copybody(self):
-        self.ui.clipboard.setText(self.ui.orders_pushButton_3.text())
+        self.clipboard.setText(self.ui.orders_pushButton_3.text())
 
     # Очистка полей
     def order_clear(self):
