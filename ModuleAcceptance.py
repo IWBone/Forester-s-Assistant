@@ -481,8 +481,8 @@ class acceptance:
                 acceptance_value_3 = 0
             if acceptance_value_4 == '':
                 acceptance_value_4 = 0
-            value_board_for_archive = int(acceptance_value_1) + int(acceptance_value_2)
-            value_timber_for_archive = int(acceptance_value_3) + int(acceptance_value_4)
+            value_board_for_archive = float(acceptance_value_1) + float(acceptance_value_2)
+            value_timber_for_archive = float(acceptance_value_3) + float(acceptance_value_4)
             # Доска
             if acceptance_value_with_reject_1 != '' and acceptance_value_with_reject_2 != '':
                 value_board_with_reject_for_archive = acceptance_value_with_reject_1 + acceptance_value_with_reject_2
