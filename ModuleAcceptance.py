@@ -154,24 +154,6 @@ class acceptance:
         self.ui.clipboard.setText(self.ui.reject_result_1.text())
     def copy_result_2(self):
         self.ui.clipboard.setText(self.ui.reject_result_2.text())
-
-# # Информация о длине
-    # def radioBtn_lenght(self):
-    #     radiobtn_2 = self.sender()
-    #     if radiobtn_2.isChecked():
-    #         self.label.setText('Длинна ' + radiobtn_2.text() + ' Метров')
-    # def radioBtn_lenght_2(self):
-    #     radiobtn_2 = self.sender()
-    #     if radiobtn_2.isChecked():
-    #         lenght = 6
-    # # Расчет вгх
-    # def calculate_vgh(self):
-    #     a = 0.4 #Ширина
-    #     b = 0.4 #Высота
-    #     c = float(self.sender()) #длина
-    #     v = float(self.input_value_2_1.text()) #Объем
-        # while b >= 2:
-        #     if round(float(a), 2) * round(float(b), 2) * round(float(c.text()), 2) == round(float(v), 2):
                 
 # # Видимость строк
     def changeVisibility_1(self):
@@ -249,6 +231,9 @@ class acceptance:
         self.ui.acceptance_btn_copy_1.setText('')
         self.ui.acceptance_btn_copy_2.setText('')
         self.ui.acceptance_branch_perc_1.setChecked(True)
+        self.ui.acceptance_checkBox_2.setChecked(False)
+        self.ui.acceptance_checkBox_3.setChecked(False)
+        self.ui.acceptance_checkBox_4.setChecked(False)
         self.providers.init_data_providers()
         self.providers.init_data_providers_2()
         self.branches.branch_initData_1()
@@ -284,15 +269,16 @@ class acceptance:
         if ((self.ui.acceptance_comboBox_2.currentText() != '' and self.ui.acceptance_branch.currentText() != '') and 
             ((((acceptance_Lenght_1 != '' or acceptance_Lenght_2 != '') and (acceptance_Lenght_5 != '' or acceptance_Lenght_6 != '')) or ((acceptance_Lenght_3 != '' or acceptance_Lenght_4 != '') and (acceptance_Lenght_7 != '' or acceptance_Lenght_8 != ''))) or 
             ((((acceptance_Lenght_1 != '' or acceptance_Lenght_2 != '') or (acceptance_Lenght_3 != '' or acceptance_Lenght_4 != '')) and ((acceptance_Lenght_5 == '' and acceptance_Lenght_6 == '') and (acceptance_Lenght_7 == '' and acceptance_Lenght_8 == '')))))):
-            db = sqlite3.connect('database.db')
-            cursor = db.cursor()
 
             # Код филиала
-            cursor.execute("SELECT branches FROM branches where code_branches = ?", [self.ui.acceptance_branch.currentText()])
-            branch = cursor.fetchone()[0]
+            db_branch = sqlite3.connect('Database/branches.db')
+            cursor_branch = db_branch.cursor()
+            cursor_branch.execute("SELECT branch FROM branches where code_branch = ?", [self.ui.acceptance_branch.currentText()])
+            branch = cursor_branch.fetchone()[0]
 
             # Заполнение темы
-            self.ui.acceptance_btn_copy_1.setText(f"""Приемка {self.ui.acceptance_branch.currentText()} {self.ui.acceptance_calendarWidget.selectedDate().toString('dd.MM.yyyy')}""")
+            if (self.ui.acceptance_branch_perc_box.value() != 0 and (acceptance_Lenght_5 != "" or (acceptance_Lenght_6 != "" or (acceptance_Lenght_7 != "" or acceptance_Lenght_8 != "")))) or self.ui.acceptance_branch_perc_box.value() == 0:
+                self.ui.acceptance_btn_copy_1.setText(f"""Приемка {self.ui.acceptance_branch.currentText()} {self.ui.acceptance_calendarWidget.selectedDate().toString('dd.MM.yyyy')}""")
 
             # Константы
             height_board = 0.025
@@ -480,10 +466,41 @@ class acceptance:
                     acceptance_value_with_reject_4 = ''
             else:
                 acceptance_value_with_reject_4 = ''
+            #  Заполнение в кнопки для копирования
             self.ui.reject_result_1.setText(str(acceptance_value_with_reject_1))
             self.ui.reject_result_2.setText(str(acceptance_value_with_reject_2))
             self.ui.reject_result_3.setText(str(acceptance_value_with_reject_3))
             self.ui.reject_result_4.setText(str(acceptance_value_with_reject_4))
+
+            # Сложение объема для архива
+            value_board_for_archive = acceptance_value_1 + acceptance_value_2
+            value_timber_for_archive = acceptance_value_3 + acceptance_value_4
+            # Доска
+            if acceptance_value_with_reject_1 != '' and acceptance_value_with_reject_2 != '':
+                value_board_with_reject_for_archive = acceptance_value_with_reject_1 + acceptance_value_with_reject_2
+            elif acceptance_value_with_reject_1 != '' and acceptance_value_with_reject_2 == '':
+                if acceptance_value_2 == '':
+                    acceptance_value_2 = 0
+                value_board_with_reject_for_archive = acceptance_value_with_reject_1 + acceptance_value_2
+            elif acceptance_value_with_reject_1 == '' and acceptance_value_with_reject_2 != '':
+                if acceptance_value_1 == '':
+                    acceptance_value_1 = 0
+                value_board_with_reject_for_archive = acceptance_value_1 + acceptance_value_with_reject_2
+            else:
+                value_board_with_reject_for_archive = value_board_for_archive
+            # Брус
+            if acceptance_value_with_reject_3 != '' and acceptance_value_with_reject_4 != '':
+                value_timber_with_reject_for_archive = acceptance_value_with_reject_3 + acceptance_value_with_reject_4
+            elif acceptance_value_with_reject_3 != '' and acceptance_value_with_reject_4 == '':
+                if acceptance_value_4 == '':
+                    acceptance_value_4 = 0
+                value_timber_with_reject_for_archive = acceptance_value_with_reject_3 + acceptance_value_4
+            elif acceptance_value_with_reject_3 == '' and acceptance_value_with_reject_4 != '':
+                if acceptance_value_3 == '':
+                    acceptance_value_3 = 0
+                value_timber_with_reject_for_archive = acceptance_value_3 + acceptance_value_with_reject_4
+            else:
+                value_timber_with_reject_for_archive = value_timber_for_archive
 
             # Вывод в тело письма
             # Доска
@@ -535,40 +552,54 @@ class acceptance:
                 body_4 = ""
 
             # Заполнение тела
-            if acceptance_Lenght_1 != "" or (acceptance_Lenght_2 != "" or (acceptance_Lenght_3 != "" or (acceptance_Lenght_4 != "" or (acceptance_Lenght_5 != "" or (acceptance_Lenght_6 != "" or (acceptance_Lenght_7 != "" or acceptance_Lenght_8 != "")))))):
-                body = f'{body_1}{body_2}{body_3}{body_4}'
-                body_with_reject = f'{body_1_with_reject}{body_2_with_reject}{body_3}{body_4}'
-                date = self.ui.acceptance_calendarWidget.selectedDate().toString('dd.MM')
-                if self.ui.acceptance_number.currentText() != "":
-                    car_number = f'{self.ui.acceptance_number.currentText()}\n'
-                else:
-                    car_number = ""
-                self.ui.acceptance_btn_copy_2.setText(f'Добрый день\n\n{date}\n{car_number.upper()}{branch}\n\n{body}\n')
+            if (self.ui.acceptance_branch_perc_box.value() != 0 and (acceptance_Lenght_5 != "" or (acceptance_Lenght_6 != "" or (acceptance_Lenght_7 != "" or acceptance_Lenght_8 != "")))) or self.ui.acceptance_branch_perc_box.value() == 0:
+                if acceptance_Lenght_1 != "" or (acceptance_Lenght_2 != "" or (acceptance_Lenght_3 != "" or (acceptance_Lenght_4 != "" or (acceptance_Lenght_5 != "" or (acceptance_Lenght_6 != "" or (acceptance_Lenght_7 != "" or acceptance_Lenght_8 != "")))))):
+                    body = f'{body_1}{body_2}{body_3}{body_4}'
+                    body_with_reject = f'{body_1_with_reject}{body_2_with_reject}{body_3}{body_4}'
+                    date = self.ui.acceptance_calendarWidget.selectedDate().toString('dd.MM.yyyy')
+                    if self.ui.acceptance_number.currentText() != "":
+                        car_number = f'{self.ui.acceptance_number.currentText()}\n'
+                    else:
+                        car_number = ""
+                    self.ui.acceptance_btn_copy_2.setText(f'Добрый день\n\n{date}\n{car_number.upper()}{branch}\n\n{body}\n')
 
             # Занесение номера машина в базу
             if self.ui.acceptance_number.currentText() != '':
-                cursor.execute("SELECT number_car, provider FROM base_nubers WHERE number_car = ? AND provider = ?", [self.ui.acceptance_number.currentText().upper(), self.ui.acceptance_comboBox_2.currentText()])
-                if cursor.fetchone() is None:
-                    cursor.execute("INSERT INTO base_nubers(number_car, provider) VALUES (?, ?)", [self.ui.acceptance_number.currentText().upper(), self.ui.acceptance_comboBox_2.currentText()])
-                    db.commit()
+                db_car_number = sqlite3.connect('Database/car_numbers.db')
+                cursor_car_number = db_car_number.cursor()
+                cursor_car_number.execute("SELECT car_number, provider FROM car_numbers WHERE car_number = ? AND provider = ?", [self.ui.acceptance_number.currentText().upper(), self.ui.acceptance_comboBox_2.currentText()])
+                if cursor_car_number.fetchone() is None:
+                    cursor_car_number.execute("INSERT INTO car_numbers(car_number, provider) VALUES (?, ?)", [self.ui.acceptance_number.currentText().upper(), self.ui.acceptance_comboBox_2.currentText()])
+                    db_car_number.commit()
+                self.providers.init_data_providers()
+                cursor_car_number.close()
+                db_car_number.close()
 
             # Занесение приемки в архив
+            db_archive_acceptance = sqlite3.connect('Database/archive_acceptance.db')
+            cursor_archive_acceptance = db_archive_acceptance.cursor()
+            # Без брака
             if self.ui.acceptance_branch_perc_box.value() == 0:
                 if self.ui.acceptance_btn_copy_1.text() != '' and self.ui.acceptance_btn_copy_2.text() != '':
-                    cursor.execute("SELECT * FROM archive_acceptance WHERE theme_acceptance = ? AND body_acceptance = ? AND provider_acceptance = ?", [self.ui.acceptance_btn_copy_1.text(), self.ui.acceptance_btn_copy_2.text(), self.ui.acceptance_comboBox_2.currentText()])
-                    if cursor.fetchone() is None:
-                        cursor.execute("INSERT INTO archive_acceptance(theme_acceptance, body_acceptance, provider_acceptance, branch_acceptance) VALUES (?, ?, ?, ?)", [self.ui.acceptance_btn_copy_1.text(), self.ui.acceptance_btn_copy_2.text(), self.ui.acceptance_comboBox_2.currentText(), self.ui.acceptance_branch.currentText()])
-                        db.commit()
-                    self.branches.acceptance_archive_selection()
+                    cursor_archive_acceptance.execute("SELECT * FROM archive_acceptance WHERE theme_acceptance = ? AND body_acceptance = ? AND provider_acceptance = ?", [self.ui.acceptance_btn_copy_1.text(), self.ui.acceptance_btn_copy_2.text(), self.ui.acceptance_comboBox_2.currentText()])
+                    if cursor_archive_acceptance.fetchone() is None:
+                        cursor_archive_acceptance.execute("INSERT INTO archive_acceptance(theme_acceptance, body_acceptance, provider_acceptance, branch_acceptance, date_acceptance, board_value_acceptance, timber_value_acceptance) VALUES (?, ?, ?, ?, ?, ?, ?)",
+                                                           [self.ui.acceptance_btn_copy_1.text(), self.ui.acceptance_btn_copy_2.text(), self.ui.acceptance_comboBox_2.currentText(), self.ui.acceptance_branch.currentText(), date, value_board_for_archive, value_timber_for_archive])
+                        db_archive_acceptance.commit()
+            # С браком
             elif self.ui.acceptance_branch_perc_box.value() != 0 and (acceptance_value_with_reject_1 != '' or (acceptance_value_with_reject_2 != '' or (acceptance_value_with_reject_3 != '' or acceptance_value_with_reject_4 != ''))):
-                    cursor.execute("SELECT * FROM archive_acceptance WHERE theme_acceptance = ? AND body_acceptance = ? AND provider_acceptance = ?", [self.ui.acceptance_btn_copy_1.text(), self.ui.acceptance_btn_copy_2.text(), self.ui.acceptance_comboBox_2.currentText()])
-                    if cursor.fetchone() is None:
-                        cursor.execute("INSERT INTO archive_acceptance(theme_acceptance, body_acceptance, provider_acceptance, branch_acceptance) VALUES (?, ?, ?, ?)", [self.ui.acceptance_btn_copy_1.text(), f'Добрый день\n\n{date}\n{car_number.upper()}{branch}\n\n{body_with_reject}\n', self.ui.acceptance_comboBox_2.currentText(), self.ui.acceptance_branch.currentText()])
-                        db.commit()
-                    self.branches.acceptance_archive_selection()
+                if self.ui.acceptance_btn_copy_1.text() != '' and self.ui.acceptance_btn_copy_2.text() != '':
+                    cursor_archive_acceptance.execute("SELECT * FROM archive_acceptance WHERE theme_acceptance = ? AND body_acceptance = ? AND provider_acceptance = ?", [self.ui.acceptance_btn_copy_1.text(), self.ui.acceptance_btn_copy_2.text(), self.ui.acceptance_comboBox_2.currentText()])
+                    if cursor_archive_acceptance.fetchone() is None:
+                        cursor_archive_acceptance.execute("INSERT INTO archive_acceptance(theme_acceptance, body_acceptance, provider_acceptance, branch_acceptance, date_acceptance, board_value_acceptance, timber_value_acceptance) VALUES (?, ?, ?, ?, ?, ?, ?)",
+                                                           [self.ui.acceptance_btn_copy_1.text(), body_with_reject, self.ui.acceptance_comboBox_2.currentText(), self.ui.acceptance_branch.currentText(), date, value_board_with_reject_for_archive, value_timber_with_reject_for_archive])
+                        db_archive_acceptance.commit()
+            self.branches.acceptance_archive_selection()
 
-            cursor.close()
-            db.close()
+            cursor_branch.close()
+            cursor_archive_acceptance.close()
+            db_branch.close()
+            db_archive_acceptance.close()
 
     # Копирование темы в буфер обмена
     def copytheme(self):

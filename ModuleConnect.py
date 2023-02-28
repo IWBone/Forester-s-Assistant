@@ -8,42 +8,69 @@ from ModuleOrders import orders
 from ModuleOutlook import outlook
 
 # Создание таблиц в БД
-with sqlite3.connect("database.db") as db:
+with sqlite3.connect("Database/car_numbers.db") as db:
     cursor = db.cursor()
-
     query = """
-    CREATE TABLE IF NOT EXISTS base_nubers(
-        number_car VARCHAR,
+    CREATE TABLE IF NOT EXISTS car_numbers(
+        car_number VARCHAR,
         provider VARCHAR
-    );
+    )"""
+    cursor.executescript(query)
+
+with sqlite3.connect("Database/providers.db") as db:
+    cursor = db.cursor()
+    query = """
     CREATE TABLE IF NOT EXISTS providers(
-        providers VARCHAR,
-        providers_email_acceptances VARCHAR,
-        providers_email_orders VARCHAR
-    );
+        provider VARCHAR,
+        provider_email_acceptance VARCHAR,
+        provider_email_order VARCHAR
+    )"""
+    cursor.executescript(query)
+
+with sqlite3.connect("Database/branches.db") as db:
+    cursor = db.cursor()
+    query = """
     CREATE TABLE IF NOT EXISTS branches(
-        branches VARCHAR,
-        code_branches VARCHAR
-    );
+        branch VARCHAR,
+        code_branch VARCHAR
+    )"""
+    cursor.executescript(query)
+
+with sqlite3.connect("Database/archive_acceptance.db") as db:
+    cursor = db.cursor()
+    query = """
     CREATE TABLE IF NOT EXISTS archive_acceptance(
         provider_acceptance VARCHAR,
         branch_acceptance VARCHAR,
         theme_acceptance VARCHAR,
-        body_acceptance TEXT
-    );
-    CREATE TABLE IF NOT EXISTS archive_order(
+        body_acceptance TEXT,
+        date_acceptance DATE,
+        board_value_acceptance VARCHAR,
+        timber_value_acceptance VARCHAR
+    )"""
+    cursor.executescript(query)
+
+with sqlite3.connect("Database/archive_orders.db") as db:
+    cursor = db.cursor()
+    query = """
+    CREATE TABLE IF NOT EXISTS archive_orders(
         provider_order VARCHAR,
         branch_order VARCHAR,
         theme_order VARCHAR,
-        body_order TEXT
-    );
-    CREATE TABLE IF NOT EXISTS outlook_copy_emails(
-        outlook_copy_emails VARCHAR
-    );
-    CREATE TABLE IF NOT EXISTS outlook_ccopy_emails(
-        outlook_ccopy_emails VARCHAR
-    )
-    """
+        body_order TEXT,
+        date_order DATE,
+        board_value_order VARCHAR,
+        timber_value_order VARCHAR
+    )"""
+    cursor.executescript(query)
+
+with sqlite3.connect("Database/outlook_email.db") as db:
+    cursor = db.cursor()
+    query = """
+    CREATE TABLE IF NOT EXISTS outlook_email(
+        outlook_email VARCHAR,
+        outlook_email_pref VARCHAR
+    )"""
     cursor.executescript(query)
 
 class connect:
@@ -59,7 +86,7 @@ class connect:
         self.outlook = outlook(ui)
 
         # # Кастомизация
-        version = 'v3.0'
+        version = 'v4.0'
         title = "Ассистент лесника" + ' ' + version
         self.ui.setWindowTitle(title)
         self.ui.setWindowIcon(QIcon("icon.ico"))
@@ -126,7 +153,7 @@ class connect:
         self.ui.branch_listWidget_1.itemClicked.connect(self.branches.branches_delete_item_1)
         self.ui.branch_listWidget_2.itemClicked.connect(self.branches.branches_delete_item_2)
         self.branches.branch_initData_1()
-        
+
         # # Архив приемок
         self.branches.init_archive_acceptance()
         self.ui.acceptance_archive_listWidget_1.itemClicked.connect(self.branches.load_body_acceptance)

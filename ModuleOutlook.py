@@ -34,75 +34,77 @@ class outlook:
     # Инициализация списка email в копию
     def outlook_init_copy_emails(self):
         self.ui.outlook_list_email_c.clear()
-        db = sqlite3.connect('database.db')
-        cursor = db.cursor()
-        cursor.execute("SELECT outlook_copy_emails FROM outlook_copy_emails")
-        items = cursor.fetchall()
+        db_outlook_email = sqlite3.connect('Database/outlook_email.db')
+        cursor_outlook_email = db_outlook_email.cursor()
+        cursor_outlook_email.execute("SELECT outlook_email FROM outlook_email WHERE outlook_email_pref = 'cc'")
+        items = cursor_outlook_email.fetchall()
         for elements in items:
             QListWidgetItem(format(elements[0]), self.ui.outlook_list_email_c)
         self.ui.outlook_list_email_c.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
         self.ui.outlook_list_email_c.setFixedHeight(self.ui.outlook_list_email_c.sizeHintForRow(0) * self.ui.outlook_list_email_c.count() + 2 * self.ui.outlook_list_email_c.frameWidth())
-        db.commit()
-        db.close()
+        cursor_outlook_email.close()
+        db_outlook_email.close()
 
     # Запись email в копию в базу
     def outlook_save_copy_emails(self):
         if self.ui.outlook_input_email_c.text() != '':
-            db = sqlite3.connect('database.db')
-            cursor = db.cursor()
-            cursor.execute("SELECT outlook_copy_emails FROM outlook_copy_emails WHERE outlook_copy_emails = ?", [self.ui.outlook_input_email_c.text().lower()])
-            if cursor.fetchone() is None:
-                cursor.execute("INSERT INTO outlook_copy_emails(outlook_copy_emails) VALUES (?)", [self.ui.outlook_input_email_c.text().lower()])
-                db.commit()
+            db_outlook_email = sqlite3.connect('Database/outlook_email.db')
+            cursor_outlook_email = db_outlook_email.cursor()
+            cursor_outlook_email.execute("SELECT outlook_email FROM outlook_email WHERE outlook_email = ? AND outlook_email_pref = 'cc'", [self.ui.outlook_input_email_c.text().lower()])
+            if cursor_outlook_email.fetchone() is None:
+                cursor_outlook_email.execute("INSERT INTO outlook_email(outlook_email, outlook_email_pref) VALUES (?, 'cc')", [self.ui.outlook_input_email_c.text().lower()])
+                db_outlook_email.commit()
+            cursor_outlook_email.close()
+            db_outlook_email.close()
             self.ui.outlook_input_email_c.setText('')
             self.outlook_init_copy_emails()
-            cursor.close()
-            db.close()
 
     # Удаление записи email в копию по клику
     def outlook_delete_copy_emails(self, item):
-        db = sqlite3.connect('database.db')
-        cursor = db.cursor()
-        cursor.execute("DELETE FROM outlook_copy_emails WHERE outlook_copy_emails = ?", [item.text()])
-        db.commit()
-        db.close()
+        db_outlook_email = sqlite3.connect('Database/outlook_email.db')
+        cursor_outlook_email = db_outlook_email.cursor()
+        cursor_outlook_email.execute("DELETE FROM outlook_email WHERE outlook_email = ? AND outlook_email_pref = 'cc'", [item.text()])
+        db_outlook_email.commit()
+        cursor_outlook_email.close()
+        db_outlook_email.close()
         self.outlook_init_copy_emails()
 
     # Инициализация списка email в скрытую копию
     def outlook_init_ccopy_emails(self):
         self.ui.outlook_list_email_cc.clear()
-        db = sqlite3.connect('database.db')
-        cursor = db.cursor()
-        cursor.execute("SELECT outlook_ccopy_emails FROM outlook_ccopy_emails")
-        items = cursor.fetchall()
+        db_outlook_email = sqlite3.connect('Database/outlook_email.db')
+        cursor_outlook_email = db_outlook_email.cursor()
+        cursor_outlook_email.execute("SELECT outlook_email FROM outlook_email WHERE outlook_email_pref = 'bcc'")
+        items = cursor_outlook_email.fetchall()
         for elements in items:
             QListWidgetItem(format(elements[0]), self.ui.outlook_list_email_cc)
         self.ui.outlook_list_email_cc.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
         self.ui.outlook_list_email_cc.setFixedHeight(self.ui.outlook_list_email_cc.sizeHintForRow(0) * self.ui.outlook_list_email_cc.count() + 2 * self.ui.outlook_list_email_cc.frameWidth())
-        db.commit()
-        db.close()
+        cursor_outlook_email.close()
+        db_outlook_email.close()
 
     # Запись email в скрытую копию в базу
     def outlook_save_ccopy_emails(self):
         if self.ui.outlook_input_email_cc.text() != '':
-            db = sqlite3.connect('database.db')
-            cursor = db.cursor()
-            cursor.execute("SELECT outlook_ccopy_emails FROM outlook_ccopy_emails WHERE outlook_ccopy_emails = ?", [self.ui.outlook_input_email_cc.text().lower()])
-            if cursor.fetchone() is None:
-                cursor.execute("INSERT INTO outlook_ccopy_emails(outlook_ccopy_emails) VALUES (?)", [self.ui.outlook_input_email_cc.text().lower()])
-                db.commit()
+            db_outlook_email = sqlite3.connect('Database/outlook_email.db')
+            cursor_outlook_email = db_outlook_email.cursor()
+            cursor_outlook_email.execute("SELECT outlook_email FROM outlook_email WHERE outlook_email = ? AND outlook_email_pref = 'bcc'", [self.ui.outlook_input_email_cc.text().lower()])
+            if cursor_outlook_email.fetchone() is None:
+                cursor_outlook_email.execute("INSERT INTO outlook_email(outlook_email, outlook_email_pref) VALUES (?, 'bcc')", [self.ui.outlook_input_email_cc.text().lower()])
+                db_outlook_email.commit()
             self.ui.outlook_input_email_cc.setText('')
             self.outlook_init_ccopy_emails()
-            cursor.close()
-            db.close()
+            cursor_outlook_email.close()
+            db_outlook_email.close()
 
     # Удаление записи email в скрытую копию по клику
     def outlook_delete_ccopy_emails(self, item):
-        db = sqlite3.connect('database.db')
-        cursor = db.cursor()
-        cursor.execute("DELETE FROM outlook_ccopy_emails WHERE outlook_ccopy_emails = ?", [item.text()])
-        db.commit()
-        db.close()
+        db_outlook_email = sqlite3.connect('Database/outlook_email.db')
+        cursor_outlook_email = db_outlook_email.cursor()
+        cursor_outlook_email.execute("DELETE FROM outlook_email WHERE outlook_email = ? AND outlook_email_pref = 'bcc'", [item.text()])
+        db_outlook_email.commit()
+        cursor_outlook_email.close()
+        db_outlook_email.close()
         self.outlook_init_ccopy_emails()
 
     # Инициализация подписи
@@ -113,25 +115,14 @@ class outlook:
 
     # Вставка изображения из буфера обмена
     def outlook_paste_signature_image(self):
-        # self.ui.outlook_input_signature.insertHtml(QApplication.clipboard().text())
         clipboard = QApplication.clipboard()
-        # if clipboard.mimeData().hasImage():
-        #     image = clipboard.pixmap().toImage()
-        #     cursor = self.ui.outlook_input_signature.textCursor()
-        #     cursor.insertImage(image)
         if clipboard.mimeData().hasImage():
             self.ui.outlook_input_signature.insertHtml('<br>')
             image = QImage(clipboard.mimeData().imageData())
             image.save("signature.png")
             self.ui.outlook_input_signature.insertHtml('<img src="signature.png"/>')
-        # elif clipboard.mimeData().hasHtml():
-        #     html = clipboard.mimeData().html()
-        #     self.ui.outlook_input_signature.insertHtml(html)
-        # else:
-        #     text = clipboard.mimeData().text()
-        #     self.ui.outlook_input_signature.insertPlainText(text)
 
-    # Запись подписи в базу
+    # Сохранение подписи
     def outlook_save_email_signature(self):
         if self.ui.outlook_input_signature.toPlainText() != '':
             with open("signature.html", "w") as file:
@@ -146,27 +137,31 @@ class outlook:
             self.ui.label_18.setVisible(True)
             QTimer.singleShot(3000, self.ui.label_18.hide)
 
-
     # Удаление подписи
     def outlook_delete_email_signature(self):
         with open("signature.html", "w") as file:
             file.write("")
         self.outlook_init_email_signature()
 
-    # os.environ["Outlook_VSTO_PowerPoint_Add-In_Path"] = "C:\Program Files\Microsoft Office\root\Office16"
     # Отправка приемки
     def outlook_send_acceptance(self):
         if not (self.ui.acceptance_btn_copy_1.text() == '' and (self.ui.acceptance_btn_copy_2.text() == '' and self.ui.acceptance_comboBox_2.currentText() == '')):
-            db = sqlite3.connect('database.db')
-            cursor = db.cursor()
-            cursor.execute("SELECT outlook_copy_emails FROM outlook_copy_emails")
-            cc_emails = cursor.fetchall()
+            db_outlook_email = sqlite3.connect('Database/outlook_email.db')
+            cursor_outlook_email = db_outlook_email.cursor()
+            cursor_outlook_email.execute("SELECT outlook_email FROM outlook_email WHERE outlook_email_pref = 'cc'")
+            cc_emails = cursor_outlook_email.fetchall()
             cc = "; ".join([email[0] for email in cc_emails])
-            cursor.execute("SELECT outlook_ccopy_emails FROM outlook_ccopy_emails")
-            bcc_emails = cursor.fetchall()
+            cursor_outlook_email.execute("SELECT outlook_email FROM outlook_email WHERE outlook_email_pref = 'bcc'")
+            bcc_emails = cursor_outlook_email.fetchall()
             bcc = "; ".join([email[0] for email in bcc_emails])
-            cursor.execute("SELECT providers_email_acceptances FROM providers where providers = ?", [self.ui.acceptance_comboBox_2.currentText()])
-            providers_email_acceptances = cursor.fetchone()[0]
+            db_providers = sqlite3.connect('Database/providers.db')
+            cursor_providers = db_providers.cursor()
+            cursor_providers.execute("SELECT provider_email_acceptance FROM providers where provider = ?", [self.ui.acceptance_comboBox_2.currentText()])
+            providers_email_acceptances = cursor_providers.fetchone()[0]
+            cursor_outlook_email.close()
+            db_outlook_email.close()
+            cursor_providers.close()
+            db_providers.close()
             outlook = win32com.client.Dispatch("Outlook.Application")
             mail = outlook.CreateItem(0)
             mail.To = providers_email_acceptances
@@ -183,16 +178,22 @@ class outlook:
 
     def outlook_send_order(self):
         if not (self.ui.orders_pushButton_2.text() == '' and (self.ui.orders_pushButton_3.text() == '' and self.ui.orders_comboBox_13.currentText() == '')):
-            db = sqlite3.connect('database.db')
-            cursor = db.cursor()
-            cursor.execute("SELECT outlook_copy_emails FROM outlook_copy_emails")
-            cc_emails = cursor.fetchall()
+            db_outlook_email = sqlite3.connect('Database/outlook_email.db')
+            cursor_outlook_email = db_outlook_email.cursor()
+            cursor_outlook_email.execute("SELECT outlook_email FROM outlook_email WHERE outlook_email_pref = 'cc'")
+            cc_emails = cursor_outlook_email.fetchall()
             cc = "; ".join([email[0] for email in cc_emails])
-            cursor.execute("SELECT outlook_ccopy_emails FROM outlook_ccopy_emails")
-            bcc_emails = cursor.fetchall()
+            cursor_outlook_email.execute("SELECT outlook_email FROM outlook_email WHERE outlook_email_pref = 'bcc'")
+            bcc_emails = cursor_outlook_email.fetchall()
             bcc = "; ".join([email[0] for email in bcc_emails])
-            cursor.execute("SELECT providers_email_orders FROM providers where providers = ?", [self.ui.orders_comboBox_13.currentText()])
-            providers_email_acceptances = cursor.fetchone()[0]
+            db_providers = sqlite3.connect('Database/providers.db')
+            cursor_providers = db_providers.cursor()
+            cursor_providers.execute("SELECT provider_email_order FROM providers where provider = ?", [self.ui.orders_comboBox_13.currentText()])
+            providers_email_acceptances = cursor_providers.fetchone()[0]
+            cursor_outlook_email.close()
+            db_outlook_email.close()
+            cursor_providers.close()
+            db_providers.close()
             outlook = win32com.client.Dispatch("Outlook.Application")
             mail = outlook.CreateItem(0)
             mail.To = providers_email_acceptances

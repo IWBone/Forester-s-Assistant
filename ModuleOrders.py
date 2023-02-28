@@ -47,18 +47,18 @@ class orders:
             self.ui.orders_spinBox_4.setVisible(False)
     # Генерация заказа
     def order(self):
-        db = sqlite3.connect('database.db')
-        cursor = db.cursor()
+        db_branches = sqlite3.connect('Database/branches.db')
+        cursor_branches = db_branches.cursor()
         if self.ui.orders_comboBox_13.currentText() and (self.ui.orders_comboBox_1.currentText() or (self.ui.orders_comboBox_2.currentText() or (self.ui.orders_comboBox_3.currentText() or self.ui.orders_comboBox_4.currentText()))):
             # Заполнение темы
-            cursor.execute("SELECT code_branches FROM branches WHERE branches = ?", [self.ui.orders_comboBox_1.currentText()])
-            code_branch_1 = cursor.fetchone()[0]
-            cursor.execute("SELECT code_branches FROM branches WHERE branches = ?", [self.ui.orders_comboBox_2.currentText()])
-            code_branch_2 = cursor.fetchone()[0]
-            cursor.execute("SELECT code_branches FROM branches WHERE branches = ?", [self.ui.orders_comboBox_3.currentText()])
-            code_branch_3 = cursor.fetchone()[0]
-            cursor.execute("SELECT code_branches FROM branches WHERE branches = ?", [self.ui.orders_comboBox_4.currentText()])
-            code_branch_4 = cursor.fetchone()[0]
+            cursor_branches.execute("SELECT code_branch FROM branches WHERE branch = ?", [self.ui.orders_comboBox_1.currentText()])
+            code_branch_1 = cursor_branches.fetchone()[0]
+            cursor_branches.execute("SELECT code_branch FROM branches WHERE branch = ?", [self.ui.orders_comboBox_2.currentText()])
+            code_branch_2 = cursor_branches.fetchone()[0]
+            cursor_branches.execute("SELECT code_branch FROM branches WHERE branch = ?", [self.ui.orders_comboBox_3.currentText()])
+            code_branch_3 = cursor_branches.fetchone()[0]
+            cursor_branches.execute("SELECT code_branch FROM branches WHERE branch = ?", [self.ui.orders_comboBox_4.currentText()])
+            code_branch_4 = cursor_branches.fetchone()[0]
             if code_branch_2 != '':
                 branch_2 = f' + {code_branch_2}'
             else: branch_2 = ''
@@ -80,6 +80,7 @@ class orders:
                 branch_4 = ''
             if code_branch_4 == code_branch_3:
                 branch_4 = ''
+            code_branch_for_archive = ", ".join([code_branch_1, branch_2, branch_3, branch_4])
             self.ui.orders_pushButton_2.setText(f"""Заказ лес {code_branch_1}{branch_2}{branch_3}{branch_4} на {self.ui.orders_calendarWidget.selectedDate().toString('dd.MM.yyyy')}""")
             # Заполнение тела
             if code_branch_1 != '':
@@ -96,14 +97,21 @@ class orders:
             else: body_4 = ''
             body = f'{body_1}{body_2}{body_3}{body_4}'
             self.ui.orders_pushButton_3.setText(f'Добрый день\n{body}\n')
+
         # Занесение заказа в архив
-        cursor.execute("SELECT * FROM archive_order WHERE theme_order = ? AND body_order = ? AND provider_order = ?", [self.ui.orders_pushButton_2.text(), self.ui.orders_pushButton_3.text(), self.ui.orders_comboBox_13.currentText()])
-        if cursor.fetchone() is None:
-            cursor.execute("INSERT INTO archive_order(theme_order, body_order, provider_order) VALUES (?, ?, ?)", [self.ui.orders_pushButton_2.text(), self.ui.orders_pushButton_3.text(), self.ui.orders_comboBox_13.currentText()])
-            db.commit()
+        db_archive_orders = sqlite3.connect('Database/archive_orders.db')
+        cursor_archive_orders = db_archive_orders.cursor()
+        cursor_archive_orders.execute("SELECT * FROM archive_orders WHERE theme_order = ? AND body_order = ? AND provider_order = ?",
+                                       [self.ui.orders_pushButton_2.text(), self.ui.orders_pushButton_3.text(), self.ui.orders_comboBox_13.currentText()])
+        if cursor_archive_orders.fetchone() is None:
+            cursor_archive_orders.execute("INSERT INTO archive_orders(theme_order, body_order, provider_order, branch_order, date_order) VALUES (?, ?, ?, ?, ?)",
+                                           [self.ui.orders_pushButton_2.text(), self.ui.orders_pushButton_3.text(), self.ui.orders_comboBox_13.currentText(), code_branch_for_archive, self.ui.orders_calendarWidget.selectedDate().toString('dd.MM.yyyy')])
+            db_archive_orders.commit()
+        cursor_branches.close()
+        db_branches.close()
+        cursor_archive_orders.close()
+        db_archive_orders.close()
         self.order_archive_selection()
-        cursor.close()
-        db.close()
 
     # Копирование темы в буфер обмена
     def order_copytheme(self):
@@ -127,60 +135,66 @@ class orders:
     # Инициализация списка тем архива приемок
     def init_archive_order(self):
         self.ui.orders_archive_listWidget_1.clear()
-        db = sqlite3.connect('database.db')
-        cursor = db.cursor()
-        cursor.execute("SELECT theme_order, rowid FROM archive_order ORDER BY rowid DESC")
-        items = cursor.fetchall()
+        db_archive_orders = sqlite3.connect('Database/archive_orders.db')
+        cursor_archive_orders = db_archive_orders.cursor()
+        cursor_archive_orders.execute("SELECT theme_order, rowid FROM archive_orders ORDER BY rowid DESC")
+        items = cursor_archive_orders.fetchall()
         for elements in items:
             QListWidgetItem(format(f'{elements[0]}, {elements[1]}'), self.ui.orders_archive_listWidget_1)
-        db.close()
+        cursor_archive_orders.close()
+        db_archive_orders.close()
+
     # Вывод содержимого приемки по теме
     def load_body_order_achive(self, item):
         self.ui.orders_archive_plainTextEdit_1.setPlainText('')
-        db = sqlite3.connect('database.db')
-        cursor = db.cursor()
+        db_archive_orders = sqlite3.connect('Database/archive_orders.db')
+        cursor_archive_orders = db_archive_orders.cursor()
         substring = item.text().split(', ')[1]
-        cursor.execute("SELECT provider_order FROM archive_order WHERE rowid = ?", [substring])
-        provider = cursor.fetchone()
-        cursor.execute("SELECT body_order FROM archive_order WHERE rowid = ?", [substring])
-        themes = cursor.fetchone()
+        cursor_archive_orders.execute("SELECT provider_order FROM archive_orders WHERE rowid = ?", [substring])
+        provider = cursor_archive_orders.fetchone()
+        cursor_archive_orders.execute("SELECT body_order FROM archive_orders WHERE rowid = ?", [substring])
+        themes = cursor_archive_orders.fetchone()
         s = f'{provider[0]}\n{"".join(str(x) for x in themes[0])}'
         self.ui.orders_archive_plainTextEdit_1.setPlainText(s)
-        db.commit()
-        db.close()
+        cursor_archive_orders.close()
+        db_archive_orders.close()
         self.ui.orders_archive_label_1.setText(substring)
+
     # Удаление данных
     def order_archive_delete_item(self):
         self.ui.orders_archive_plainTextEdit_1.setPlainText('')
-        db = sqlite3.connect('database.db')
-        cursor = db.cursor()
-        cursor.execute("DELETE FROM archive_order WHERE rowid = ?", [self.ui.orders_archive_label_1.text()])
-        db.commit()
-        db.close()
+        db_archive_orders = sqlite3.connect('Database/archive_orders.db')
+        cursor_archive_orders = db_archive_orders.cursor()
+        cursor_archive_orders.execute("DELETE FROM archive_orders WHERE rowid = ?", [self.ui.orders_archive_label_1.text()])
+        db_archive_orders.commit()
+        cursor_archive_orders.close()
+        db_archive_orders.close()
         self.order_archive_selection()
+
     # Отбор данных
     def order_archive_selection(self):
         self.ui.orders_archive_plainTextEdit_1.setPlainText('')
-        db = sqlite3.connect('database.db')
-        cursor = db.cursor()
+        db_archive_orders = sqlite3.connect('Database/archive_orders.db')
+        cursor_archive_orders = db_archive_orders.cursor()
         if self.ui.orders_archive_comboBox_1.currentText() != '' and self.ui.orders_archive_comboBox_2.currentText() != '':
             self.ui.orders_archive_listWidget_1.clear()
-            cursor.execute("SELECT theme_order, rowid FROM archive_order WHERE theme_order LIKE ? AND provider_order = ? ORDER BY rowid DESC", ['%' + self.ui.orders_archive_comboBox_1.currentText() + '%', self.ui.orders_archive_comboBox_2.currentText()])
-            items = cursor.fetchall()
+            cursor_archive_orders.execute("SELECT theme_order, rowid FROM archive_orders WHERE theme_order LIKE ? AND provider_order = ? ORDER BY rowid DESC", ['%' + self.ui.orders_archive_comboBox_1.currentText() + '%', self.ui.orders_archive_comboBox_2.currentText()])
+            items = cursor_archive_orders.fetchall()
             for elements in items:
                 QListWidgetItem(format(f'{elements[0]}, {elements[1]}'), self.ui.orders_archive_listWidget_1)
         elif self.ui.orders_archive_comboBox_1.currentText() == '' and self.ui.orders_archive_comboBox_2.currentText() != '':
             self.ui.orders_archive_listWidget_1.clear()
-            cursor.execute("SELECT theme_order, rowid FROM archive_order WHERE provider_order = ? ORDER BY rowid DESC", [self.ui.orders_archive_comboBox_2.currentText()])
-            items = cursor.fetchall()
+            cursor_archive_orders.execute("SELECT theme_order, rowid FROM archive_orders WHERE provider_order = ? ORDER BY rowid DESC", [self.ui.orders_archive_comboBox_2.currentText()])
+            items = cursor_archive_orders.fetchall()
             for elements in items:
                 QListWidgetItem(format(f'{elements[0]}, {elements[1]}'), self.ui.orders_archive_listWidget_1)
         elif self.ui.orders_archive_comboBox_1.currentText() != '' and self.ui.orders_archive_comboBox_2.currentText() == '':
             self.ui.orders_archive_listWidget_1.clear()
-            cursor.execute("SELECT theme_order, rowid FROM archive_order WHERE theme_order LIKE ? ORDER BY rowid DESC", ['%' + self.ui.orders_archive_comboBox_1.currentText() + '%'])
-            items = cursor.fetchall()
+            cursor_archive_orders.execute("SELECT theme_order, rowid FROM archive_orders WHERE theme_order LIKE ? ORDER BY rowid DESC", ['%' + self.ui.orders_archive_comboBox_1.currentText() + '%'])
+            items = cursor_archive_orders.fetchall()
             for elements in items:
                 QListWidgetItem(format(f'{elements[0]}, {elements[1]}'), self.ui.orders_archive_listWidget_1)
         else:
             self.init_archive_order()
-        db.close()
+        cursor_archive_orders.close()
+        db_archive_orders.close()
