@@ -86,7 +86,7 @@ class connect:
         self.outlook = outlook(ui)
 
         # # Кастомизация
-        version = 'v4.0'
+        version = 'v4.1'
         title = "Ассистент лесника" + ' ' + version
         self.ui.setWindowTitle(title)
         self.ui.setWindowIcon(QIcon("icon.ico"))

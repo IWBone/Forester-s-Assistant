@@ -4231,7 +4231,7 @@ border: 1px solid black;
              <item row="0" column="0">
               <widget class="QComboBox" name="orders_archive_comboBox_1">
                <property name="sizePolicy">
-                <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
                  <horstretch>0</horstretch>
                  <verstretch>0</verstretch>
                 </sizepolicy>
@@ -4318,7 +4318,7 @@ color: white
              <item row="0" column="1">
               <widget class="QComboBox" name="orders_archive_comboBox_2">
                <property name="sizePolicy">
-                <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+                <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                  <horstretch>0</horstretch>
                  <verstretch>0</verstretch>
                 </sizepolicy>

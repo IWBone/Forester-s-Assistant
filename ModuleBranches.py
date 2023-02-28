@@ -6,6 +6,7 @@ class branches:
         self.ui = ui
         self.ui.branch_lineEdit_1.setPlaceholderText('Филиал')
         self.ui.branch_lineEdit_2.setPlaceholderText('Код филиала')
+        # self.ui.branch_lineEdit_2.setMaxLength(2)
 
         # Вставка пустых строк
         db_branch = sqlite3.connect('Database/branches.db')
@@ -64,9 +65,9 @@ class branches:
         if self.ui.branch_lineEdit_1.text() != '' and self.ui.branch_lineEdit_2.text() != '':
             db_branch = sqlite3.connect('Database/branches.db')
             cursor_branch = db_branch.cursor()
-            cursor_branch.execute("SELECT * FROM branches WHERE branch = ? AND code_branch = ?", [self.ui.branch_lineEdit_1.text(), self.ui.branch_lineEdit_2.text()])
+            cursor_branch.execute("SELECT * FROM branches WHERE branch = ? AND code_branch = ?", [self.ui.branch_lineEdit_1.text(), self.ui.branch_lineEdit_2.text().upper()])
             if cursor_branch.fetchone() is None:
-                cursor_branch.execute("INSERT INTO branches(branch, code_branch) VALUES (?, ?)", [self.ui.branch_lineEdit_1.text(), self.ui.branch_lineEdit_2.text()])
+                cursor_branch.execute("INSERT INTO branches(branch, code_branch) VALUES (?, ?)", [self.ui.branch_lineEdit_1.text(), self.ui.branch_lineEdit_2.text().upper()])
                 db_branch.commit()
             cursor_branch.close()
             db_branch.close()
@@ -113,9 +114,10 @@ class branches:
         self.ui.acceptance_archive_plainTextEdit_2.setPlainText('')
         db_archive_acceptance = sqlite3.connect('Database/archive_acceptance.db')
         cursor_archive_acceptance = db_archive_acceptance.cursor()
-        cursor_archive_acceptance.execute("SELECT provider_acceptance FROM archive_acceptance WHERE theme_acceptance = ? AND rowid = ?", [item.text()[:21], item.text()[23:]])
+        theme = item.text().split(', ')
+        cursor_archive_acceptance.execute("SELECT provider_acceptance FROM archive_acceptance WHERE theme_acceptance = ? AND rowid = ?", [theme[0], theme[1]])
         provider = cursor_archive_acceptance.fetchone()
-        cursor_archive_acceptance.execute("SELECT body_acceptance FROM archive_acceptance WHERE theme_acceptance = ? AND rowid = ?", [item.text()[:21], item.text()[23:]])
+        cursor_archive_acceptance.execute("SELECT body_acceptance FROM archive_acceptance WHERE theme_acceptance = ? AND rowid = ?", [theme[0], theme[1]])
         body = cursor_archive_acceptance.fetchone()
         s = f'{provider[0]}\n{"".join(str(x) for x in body[0])}'
         self.ui.acceptance_archive_plainTextEdit_2.setPlainText(s)
@@ -125,14 +127,17 @@ class branches:
 
     # Удаление данных
     def acceptance_archive_delete_item(self):
-        self.ui.acceptance_archive_plainTextEdit_2.setPlainText('')
-        db_archive_acceptance = sqlite3.connect('Database/archive_acceptance.db')
-        cursor_archive_acceptance = db_archive_acceptance.cursor()
-        cursor_archive_acceptance.execute("DELETE FROM archive_acceptance WHERE theme_acceptance = ? AND rowid = ?", [self.ui.acceptance_archive_label_1.text()[:21], self.ui.acceptance_archive_label_1.text()[23:]])
-        db_archive_acceptance.commit()
-        cursor_archive_acceptance.close()
-        db_archive_acceptance.close()
-        self.acceptance_archive_selection()
+        if self.ui.acceptance_archive_label_1.text() != '':
+            self.ui.acceptance_archive_plainTextEdit_2.setPlainText('')
+            db_archive_acceptance = sqlite3.connect('Database/archive_acceptance.db')
+            cursor_archive_acceptance = db_archive_acceptance.cursor()
+            theme = self.ui.acceptance_archive_label_1.text().split(', ')
+            cursor_archive_acceptance.execute("DELETE FROM archive_acceptance WHERE theme_acceptance = ? AND rowid = ?", [theme[0], theme[1]])
+            db_archive_acceptance.commit()
+            cursor_archive_acceptance.close()
+            db_archive_acceptance.close()
+            self.acceptance_archive_selection()
+            self.ui.acceptance_archive_label_1.setText('')
 
     # Отбор данных
     def acceptance_archive_selection(self):

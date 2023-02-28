@@ -47,9 +47,9 @@ class orders:
             self.ui.orders_spinBox_4.setVisible(False)
     # Генерация заказа
     def order(self):
-        db_branches = sqlite3.connect('Database/branches.db')
-        cursor_branches = db_branches.cursor()
-        if self.ui.orders_comboBox_13.currentText() and (self.ui.orders_comboBox_1.currentText() or (self.ui.orders_comboBox_2.currentText() or (self.ui.orders_comboBox_3.currentText() or self.ui.orders_comboBox_4.currentText()))):
+        if self.ui.orders_comboBox_13.currentText() != '' and (self.ui.orders_comboBox_1.currentText() != '' or (self.ui.orders_comboBox_2.currentText() != '' or (self.ui.orders_comboBox_3.currentText() != '' or self.ui.orders_comboBox_4.currentText() != ''))):
+            db_branches = sqlite3.connect('Database/branches.db')
+            cursor_branches = db_branches.cursor()
             # Заполнение темы
             cursor_branches.execute("SELECT code_branch FROM branches WHERE branch = ?", [self.ui.orders_comboBox_1.currentText()])
             code_branch_1 = cursor_branches.fetchone()[0]
@@ -98,20 +98,20 @@ class orders:
             body = f'{body_1}{body_2}{body_3}{body_4}'
             self.ui.orders_pushButton_3.setText(f'Добрый день\n{body}\n')
 
-        # Занесение заказа в архив
-        db_archive_orders = sqlite3.connect('Database/archive_orders.db')
-        cursor_archive_orders = db_archive_orders.cursor()
-        cursor_archive_orders.execute("SELECT * FROM archive_orders WHERE theme_order = ? AND body_order = ? AND provider_order = ?",
-                                       [self.ui.orders_pushButton_2.text(), self.ui.orders_pushButton_3.text(), self.ui.orders_comboBox_13.currentText()])
-        if cursor_archive_orders.fetchone() is None:
-            cursor_archive_orders.execute("INSERT INTO archive_orders(theme_order, body_order, provider_order, branch_order, date_order) VALUES (?, ?, ?, ?, ?)",
-                                           [self.ui.orders_pushButton_2.text(), self.ui.orders_pushButton_3.text(), self.ui.orders_comboBox_13.currentText(), code_branch_for_archive, self.ui.orders_calendarWidget.selectedDate().toString('dd.MM.yyyy')])
-            db_archive_orders.commit()
-        cursor_branches.close()
-        db_branches.close()
-        cursor_archive_orders.close()
-        db_archive_orders.close()
-        self.order_archive_selection()
+            # Занесение заказа в архив
+            db_archive_orders = sqlite3.connect('Database/archive_orders.db')
+            cursor_archive_orders = db_archive_orders.cursor()
+            cursor_archive_orders.execute("SELECT * FROM archive_orders WHERE theme_order = ? AND body_order = ? AND provider_order = ?",
+                                        [self.ui.orders_pushButton_2.text(), self.ui.orders_pushButton_3.text(), self.ui.orders_comboBox_13.currentText()])
+            if cursor_archive_orders.fetchone() is None:
+                cursor_archive_orders.execute("INSERT INTO archive_orders(theme_order, body_order, provider_order, branch_order, date_order) VALUES (?, ?, ?, ?, ?)",
+                                            [self.ui.orders_pushButton_2.text(), self.ui.orders_pushButton_3.text(), self.ui.orders_comboBox_13.currentText(), code_branch_for_archive, self.ui.orders_calendarWidget.selectedDate().toString('dd.MM.yyyy')])
+                db_archive_orders.commit()
+            cursor_branches.close()
+            db_branches.close()
+            cursor_archive_orders.close()
+            db_archive_orders.close()
+            self.order_archive_selection()
 
     # Копирование темы в буфер обмена
     def order_copytheme(self):
@@ -169,6 +169,7 @@ class orders:
         db_archive_orders.commit()
         cursor_archive_orders.close()
         db_archive_orders.close()
+        self.ui.orders_archive_label_1.setText('')
         self.order_archive_selection()
 
     # Отбор данных

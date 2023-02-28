@@ -473,8 +473,16 @@ class acceptance:
             self.ui.reject_result_4.setText(str(acceptance_value_with_reject_4))
 
             # Сложение объема для архива
-            value_board_for_archive = acceptance_value_1 + acceptance_value_2
-            value_timber_for_archive = acceptance_value_3 + acceptance_value_4
+            if acceptance_value_1 == '':
+                acceptance_value_1 = 0
+            if acceptance_value_2 == '':
+                acceptance_value_2 = 0
+            if acceptance_value_3 == '':
+                acceptance_value_3 = 0
+            if acceptance_value_4 == '':
+                acceptance_value_4 = 0
+            value_board_for_archive = int(acceptance_value_1) + int(acceptance_value_2)
+            value_timber_for_archive = int(acceptance_value_3) + int(acceptance_value_4)
             # Доска
             if acceptance_value_with_reject_1 != '' and acceptance_value_with_reject_2 != '':
                 value_board_with_reject_for_archive = acceptance_value_with_reject_1 + acceptance_value_with_reject_2
@@ -554,14 +562,14 @@ class acceptance:
             # Заполнение тела
             if (self.ui.acceptance_branch_perc_box.value() != 0 and (acceptance_Lenght_5 != "" or (acceptance_Lenght_6 != "" or (acceptance_Lenght_7 != "" or acceptance_Lenght_8 != "")))) or self.ui.acceptance_branch_perc_box.value() == 0:
                 if acceptance_Lenght_1 != "" or (acceptance_Lenght_2 != "" or (acceptance_Lenght_3 != "" or (acceptance_Lenght_4 != "" or (acceptance_Lenght_5 != "" or (acceptance_Lenght_6 != "" or (acceptance_Lenght_7 != "" or acceptance_Lenght_8 != "")))))):
-                    body = f'{body_1}{body_2}{body_3}{body_4}'
-                    body_with_reject = f'{body_1_with_reject}{body_2_with_reject}{body_3}{body_4}'
                     date = self.ui.acceptance_calendarWidget.selectedDate().toString('dd.MM.yyyy')
                     if self.ui.acceptance_number.currentText() != "":
                         car_number = f'{self.ui.acceptance_number.currentText()}\n'
                     else:
                         car_number = ""
+                    body = f'{body_1}{body_2}{body_3}{body_4}'
                     self.ui.acceptance_btn_copy_2.setText(f'Добрый день\n\n{date}\n{car_number.upper()}{branch}\n\n{body}\n')
+                    body_with_reject = f'Добрый день\n\n{date}\n{car_number.upper()}{branch}\n\n{body_1_with_reject}{body_2_with_reject}{body_3}{body_4}\n'
 
             # Занесение номера машина в базу
             if self.ui.acceptance_number.currentText() != '':
