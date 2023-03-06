@@ -151,9 +151,13 @@ class acceptance:
 
 # # Копирование результата вычисления принимаего брака в буфер обмена
     def copy_result_1(self):
-        self.ui.clipboard.setText(self.ui.reject_result_1.text())
+        self.clipboard.setText(self.ui.reject_result_1.text())
     def copy_result_2(self):
-        self.ui.clipboard.setText(self.ui.reject_result_2.text())
+        self.clipboard.setText(self.ui.reject_result_2.text())
+    def copy_result_3(self):
+        self.clipboard.setText(self.ui.reject_result_3.text())
+    def copy_result_4(self):
+        self.clipboard.setText(self.ui.reject_result_4.text())
                 
 # # Видимость строк
     def changeVisibility_1(self):

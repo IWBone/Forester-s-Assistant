@@ -4476,6 +4476,382 @@ border: 1px solid black;
         </item>
        </layout>
       </widget>
+      <widget class="QWidget" name="">
+       <attribute name="title">
+        <string>Другое</string>
+       </attribute>
+       <layout class="QGridLayout" name="gridLayout_16">
+        <item row="0" column="0">
+         <layout class="QGridLayout" name="gridLayout_14">
+          <item row="1" column="1">
+           <widget class="QFrame" name="frame_9">
+            <property name="frameShape">
+             <enum>QFrame::StyledPanel</enum>
+            </property>
+            <property name="frameShadow">
+             <enum>QFrame::Raised</enum>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="2" rowspan="2">
+           <widget class="QFrame" name="frame_14">
+            <property name="styleSheet">
+             <string notr="true">QFrame {
+border: 1px solid black;
+}</string>
+            </property>
+            <property name="frameShape">
+             <enum>QFrame::StyledPanel</enum>
+            </property>
+            <property name="frameShadow">
+             <enum>QFrame::Raised</enum>
+            </property>
+            <layout class="QGridLayout" name="gridLayout_25">
+             <item row="2" column="0">
+              <widget class="QRadioButton" name="other_radioButton_lenght_1">
+               <property name="font">
+                <font>
+                 <family>Calibri</family>
+                 <pointsize>10</pointsize>
+                </font>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">color: white</string>
+               </property>
+               <property name="text">
+                <string>3м</string>
+               </property>
+              </widget>
+             </item>
+             <item row="2" column="1">
+              <widget class="QRadioButton" name="other_radioButton_lenght_2">
+               <property name="font">
+                <font>
+                 <family>Calibri</family>
+                 <pointsize>10</pointsize>
+                </font>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">color: white</string>
+               </property>
+               <property name="text">
+                <string>6м</string>
+               </property>
+              </widget>
+             </item>
+             <item row="2" column="4">
+              <widget class="QPushButton" name="other_calculate_1">
+               <property name="font">
+                <font>
+                 <family>Calibri</family>
+                 <pointsize>10</pointsize>
+                </font>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">QPushButton {
+	background-color: qlineargradient(spread:pad, x1:0, y1:0.709773, x2:0, y2:1, stop:0 rgba(0, 0, 0, 255), stop:1 rgba(255, 255, 255, 255));
+border: 2px solid white;
+border-radius: 10;
+color: white
+}
+QPushButton::hover {
+	background-color: rgb(86, 86, 86)
+}
+
+QPushButton::pressed {
+	background-color:rgb(0, 0, 0)
+}
+</string>
+               </property>
+               <property name="text">
+                <string>Сгенерировать</string>
+               </property>
+              </widget>
+             </item>
+             <item row="6" column="0" colspan="5">
+              <widget class="QListWidget" name="other_list_1">
+               <property name="font">
+                <font>
+                 <family>Calibri</family>
+                 <pointsize>10</pointsize>
+                </font>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">QListWidget {
+background-color: #22222e;
+border: 2px solid white;
+border-radius: 10;
+color: white;
+}
+
+QListWidget::item {
+  text-align: center;
+}
+</string>
+               </property>
+              </widget>
+             </item>
+             <item row="2" column="3">
+              <widget class="QDoubleSpinBox" name="other_input_value_1">
+               <property name="font">
+                <font>
+                 <family>Calibri</family>
+                 <pointsize>10</pointsize>
+                </font>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">background-color: #22222e;
+border: 2px solid white;
+border-radius: 10;
+color: white
+</string>
+               </property>
+               <property name="maximum">
+                <double>15.000000000000000</double>
+               </property>
+              </widget>
+             </item>
+             <item row="4" column="3" colspan="2">
+              <widget class="QPushButton" name="other_copy_2">
+               <property name="font">
+                <font>
+                 <family>Calibri</family>
+                </font>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">QPushButton {
+	background-color: rgb(255, 255, 255);
+	text-align: left top;
+}
+QPushButton::pressed {
+	background-color: rgb(255, 255, 255)
+}
+QPushButton::hover {
+	
+	background-color: rgb(240, 240, 240);
+}</string>
+               </property>
+               <property name="text">
+                <string/>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="3">
+              <widget class="QLabel" name="other_label_3">
+               <property name="font">
+                <font>
+                 <family>Calibri</family>
+                 <pointsize>10</pointsize>
+                </font>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">qproperty-alignment: AlignCenter;
+color: rgb(255, 255, 255);
+border: None</string>
+               </property>
+               <property name="text">
+                <string>Объем</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="0" colspan="5">
+              <widget class="QLabel" name="other_label_1">
+               <property name="font">
+                <font>
+                 <family>Calibri</family>
+                 <pointsize>10</pointsize>
+                </font>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">color: rgb(255, 255, 255);
+border: None</string>
+               </property>
+               <property name="text">
+                <string>Генератор ширины и высоты пачки по объему и длине для приемки</string>
+               </property>
+              </widget>
+             </item>
+             <item row="2" column="2">
+              <widget class="QSpinBox" name="other_input_lenght_1">
+               <property name="font">
+                <font>
+                 <family>Calibri</family>
+                 <pointsize>10</pointsize>
+                </font>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">background-color: #22222e;
+border: 2px solid white;
+border-radius: 10;
+color: white
+</string>
+               </property>
+               <property name="maximum">
+                <number>6</number>
+               </property>
+              </widget>
+             </item>
+             <item row="4" column="0" colspan="2">
+              <widget class="QPushButton" name="other_copy_1">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="font">
+                <font>
+                 <family>Calibri</family>
+                 <pointsize>10</pointsize>
+                </font>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">QPushButton {
+	background-color: rgb(255, 255, 255);
+	text-align: left top;
+}
+QPushButton::pressed {
+	background-color: rgb(255, 255, 255)
+}
+QPushButton::hover {
+	
+	background-color: rgb(240, 240, 240);
+}</string>
+               </property>
+               <property name="text">
+                <string/>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="0" colspan="3">
+              <widget class="QLabel" name="other_label_2">
+               <property name="font">
+                <font>
+                 <family>Calibri</family>
+                 <pointsize>10</pointsize>
+                </font>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">qproperty-alignment: AlignCenter;
+color: rgb(255, 255, 255);
+border: None</string>
+               </property>
+               <property name="text">
+                <string>Длина пачки</string>
+               </property>
+              </widget>
+             </item>
+             <item row="3" column="3" colspan="2">
+              <widget class="QLabel" name="label_24">
+               <property name="styleSheet">
+                <string notr="true">qproperty-alignment: AlignCenter;
+color: rgb(255, 255, 255);
+border: None</string>
+               </property>
+               <property name="text">
+                <string>↓ Копирование высоты ↓</string>
+               </property>
+              </widget>
+             </item>
+             <item row="3" column="0" colspan="2">
+              <widget class="QLabel" name="label_22">
+               <property name="styleSheet">
+                <string notr="true">qproperty-alignment: AlignCenter;
+color: rgb(255, 255, 255);
+border: None</string>
+               </property>
+               <property name="text">
+                <string>↓ Копирование ширины ↓</string>
+               </property>
+              </widget>
+             </item>
+             <item row="5" column="0" colspan="5">
+              <widget class="QLabel" name="label_23">
+               <property name="font">
+                <font>
+                 <family>Calibri</family>
+                 <pointsize>8</pointsize>
+                </font>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">qproperty-alignment: AlignCenter;
+color: rgb(255, 255, 255);
+border: None</string>
+               </property>
+               <property name="text">
+                <string>↓ Список подобранных ширин и высот ↓</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </item>
+          <item row="0" column="1" alignment="Qt::AlignTop">
+           <widget class="QFrame" name="frame_15">
+            <property name="styleSheet">
+             <string notr="true">QFrame {
+border: 1px solid black;
+}</string>
+            </property>
+            <property name="frameShape">
+             <enum>QFrame::StyledPanel</enum>
+            </property>
+            <property name="frameShadow">
+             <enum>QFrame::Raised</enum>
+            </property>
+            <layout class="QGridLayout" name="gridLayout_15">
+             <item row="1" column="0" colspan="3">
+              <widget class="QProgressBar" name="other_progressBar">
+               <property name="font">
+                <font>
+                 <family>Calibri</family>
+                 <pointsize>10</pointsize>
+                </font>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">color: rgb(255, 255, 255);</string>
+               </property>
+               <property name="value">
+                <number>0</number>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="1">
+              <widget class="QPushButton" name="other_converter">
+               <property name="font">
+                <font>
+                 <family>Calibri</family>
+                 <pointsize>10</pointsize>
+                </font>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">QPushButton {
+	background-color: qlineargradient(spread:pad, x1:0, y1:0.709773, x2:0, y2:1, stop:0 rgba(0, 0, 0, 255), stop:1 rgba(255, 255, 255, 255));
+border: 2px solid white;
+border-radius: 10;
+color: white
+}
+QPushButton::hover {
+	background-color: rgb(86, 86, 86)
+}
+
+QPushButton::pressed {
+	background-color:rgb(0, 0, 0)
+}
+</string>
+               </property>
+               <property name="text">
+                <string>   Конвертировать файлы PDF2JPG   </string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </item>
+         </layout>
+        </item>
+       </layout>
+      </widget>
      </widget>
     </item>
    </layout>

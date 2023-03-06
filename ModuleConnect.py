@@ -6,6 +6,7 @@ from ModuleProviders import providers
 from ModuleBranches import branches
 from ModuleOrders import orders
 from ModuleOutlook import outlook
+from ModuleConverter import converter
 
 # Создание таблиц в БД
 with sqlite3.connect("Database/car_numbers.db") as db:
@@ -84,6 +85,7 @@ class connect:
         self.branches = branches(ui)
         self.orders = orders(ui)
         self.outlook = outlook(ui)
+        self.converter = converter(ui)
 
         # # Кастомизация
         version = 'v4.1'
@@ -101,6 +103,8 @@ class connect:
         self.ui.reject_radioButton3.toggled.connect(self.acceptance.radiobtn_perc3)
         self.ui.reject_result_1.clicked.connect(self.acceptance.copy_result_1)
         self.ui.reject_result_2.clicked.connect(self.acceptance.copy_result_2)
+        self.ui.reject_result_3.clicked.connect(self.acceptance.copy_result_3)
+        self.ui.reject_result_4.clicked.connect(self.acceptance.copy_result_4)
 
         # # Подбор В и Ш
         # self.radioButton_lenght.toggled.connect(self.radioBtn_lenght)
@@ -201,3 +205,13 @@ class connect:
         self.ui.outlook_btn_delete_signature.clicked.connect(self.outlook.outlook_delete_email_signature)
         self.ui.outlook_send_acceptance.clicked.connect(self.outlook.outlook_send_acceptance)
         self.ui.outlook_send_order.clicked.connect(self.outlook.outlook_send_order)
+
+        # Конвертер
+        self.ui.other_converter.clicked.connect(self.converter.convert_pdf2img)
+        # Подбор ширины и высоты
+        self.ui.other_calculate_1.clicked.connect(self.converter.selection)
+        self.ui.other_radioButton_lenght_1.toggled.connect(self.converter.lenght_selection_1)
+        self.ui.other_radioButton_lenght_2.toggled.connect(self.converter.lenght_selection_2)
+        self.ui.other_list_1.itemClicked.connect(self.converter.item_for_copy)
+        self.ui.other_copy_1.clicked.connect(self.converter.btn_copy_1)
+        self.ui.other_copy_2.clicked.connect(self.converter.btn_copy_2)
