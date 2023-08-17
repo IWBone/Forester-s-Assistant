@@ -76,7 +76,7 @@ QTabBar::tab:hover
 }</string>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>2</number>
       </property>
       <widget class="QWidget" name="tab_3">
        <attribute name="title">
@@ -4231,7 +4231,7 @@ border: 1px solid black;
              <item row="0" column="0">
               <widget class="QComboBox" name="orders_archive_comboBox_1">
                <property name="sizePolicy">
-                <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+                <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                  <horstretch>0</horstretch>
                  <verstretch>0</verstretch>
                 </sizepolicy>
@@ -4476,7 +4476,7 @@ border: 1px solid black;
         </item>
        </layout>
       </widget>
-      <widget class="QWidget" name="">
+      <widget class="QWidget" name="widget">
        <attribute name="title">
         <string>Другое</string>
        </attribute>

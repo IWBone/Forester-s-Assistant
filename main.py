@@ -2,6 +2,8 @@ import sys
 from PyQt6.QtWidgets import QMainWindow, QApplication
 from PyQt6 import uic
 from ModuleConnect import connect
+import tracemalloc
+tracemalloc.start()
 
 class CalcWood(QMainWindow):
     def __init__(self):

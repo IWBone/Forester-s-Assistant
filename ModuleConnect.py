@@ -1,5 +1,6 @@
 import sqlite3
 from PyQt6.QtGui import QIcon
+import asyncio
 from PyQt6.QtWidgets import QApplication
 from ModuleAcceptance import acceptance
 from ModuleProviders import providers
@@ -208,6 +209,8 @@ class connect:
 
         # Конвертер
         self.ui.other_converter.clicked.connect(self.converter.convert_pdf2img)
+        # self.ui.other_converter.clicked.connect(self.converter.as_convert_pdf2img)
+        # self.ui.other_converter.clicked.connect(lambda: asyncio.run(self.converter.as_thr_convert_pdf2img()))
         # Подбор ширины и высоты
         self.ui.other_calculate_1.clicked.connect(self.converter.selection)
         self.ui.other_radioButton_lenght_1.toggled.connect(self.converter.lenght_selection_1)
@@ -215,3 +218,6 @@ class connect:
         self.ui.other_list_1.itemClicked.connect(self.converter.item_for_copy)
         self.ui.other_copy_1.clicked.connect(self.converter.btn_copy_1)
         self.ui.other_copy_2.clicked.connect(self.converter.btn_copy_2)
+
+    # async def on_converter_clicked(self):
+    #     await self.converter.as_convert_pdf2img()

@@ -30,8 +30,8 @@ class providers:
         self.ui.info_lineEdit_3.setPlaceholderText('Добавление поставщика')
         self.ui.info_lineEdit_4.setPlaceholderText('Почта для приемок')
         self.ui.info_lineEdit_5.setPlaceholderText('Почта для заказов')
-        self.ui.info_lineEdit_4.setValidator(QRegularExpressionValidator(QRegularExpression(r"^[a-zA-Z0-9_.+-]+@[a-z]+\.[a-z]+$")))
-        self.ui.info_lineEdit_5.setValidator(QRegularExpressionValidator(QRegularExpression(r"^[a-zA-Z0-9_.+-]+@[a-z]+\.[a-z]+$")))
+        self.ui.info_lineEdit_4.setValidator(QRegularExpressionValidator(QRegularExpression(r"^[a-zA-Z0-9_.+-]+@[a-z-]+\.[a-z-]+$")))
+        self.ui.info_lineEdit_5.setValidator(QRegularExpressionValidator(QRegularExpression(r"^[a-zA-Z0-9_.+-]+@[a-z-]+\.[a-z-]+$")))
 
     # Таблица с номерами машин
     # Вывод номеров из базы
