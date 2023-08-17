@@ -144,7 +144,7 @@ class providers:
     def write_data_providers_2(self):
         db_providers = sqlite3.connect('Database/providers.db')
         cursor_providers = db_providers.cursor()
-        pattern = re.compile(r"^[a-zA-Z0-9_.+-]+@[a-z]+\.[a-z]+$")
+        pattern = re.compile(r"^[a-zA-Z0-9_.+-]+@[a-z-]+\.[a-z-]+$")
 
         if (self.ui.info_lineEdit_3.text() != '' and (self.ui.info_lineEdit_4.text() == '' and self.ui.info_lineEdit_5.text() != '')) and pattern.match(self.ui.info_lineEdit_5.text()):
             cursor_providers.execute("SELECT * FROM providers WHERE provider = ? and provider_email_acceptance = ? and provider_email_order = ?",
